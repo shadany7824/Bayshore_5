@@ -29,7 +29,13 @@ export default class UserModule extends Module {
 					accessCode: body.accessCode
 				},
 				include: {
-					cars: true
+					cars: {
+						include:{
+							state: true,
+							setting: true,
+							gtWing: true
+						}
+					}
 				}
 			});
 
@@ -191,6 +197,9 @@ export default class UserModule extends Module {
 				userTutorials += user.confirmedTutorials[i];
 			}
 
+			// Get the states of the user's cars
+			let carStates = user.cars.map(e => e.state);
+
 			// Response data
 			let msg = {
 				error: wm.wm5.protobuf.ErrorCode.ERR_SUCCESS,
@@ -209,7 +218,8 @@ export default class UserModule extends Module {
 
 				// 5 cars in-game, 200 cars on terminal
 				numOfOwnedCars: user.cars.length,
-				cars: user.cars.slice(0, body.maxCars), 
+				cars: user.cars.slice(0, body.maxCars),
+				carStates,
 
 				// TODO: make saving to FT Ticket
 				carCoupon: wm.wm5.protobuf.CarCreationCoupon.CAR_COUPON_HP600,
