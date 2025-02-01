@@ -31,7 +31,6 @@ export default class StartupModule extends Module {
                 teamSuspensionAnnouncementStartAt: 2147483647, // idk what this is
                 teamSuspensionStartAt: 2147483647, // idk what this is
                 sendingReportPermitted: false,
-                ctrItemRestricted: false,
                 featureVersion: {
                     version: 9,
                     year: 2021,
@@ -39,13 +38,6 @@ export default class StartupModule extends Module {
                     pluses: 0,
                     releaseAt: 0 // idk what this is
                 },
-
-                // Competition (OCM)
-                latestCompetitionId: null,
-                competitionSchedule: null,
-
-                // Special Ghost (VS Maxi G Truck)
-                specialGhostSchedule: null,
 
                 // Face Recognition
                 faceRecognitionPermitted: false,
