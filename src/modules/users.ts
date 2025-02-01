@@ -29,7 +29,13 @@ export default class UserModule extends Module {
 					accessCode: body.accessCode
 				},
 				include: {
-					cars: true
+					cars: {
+						include:{
+							state: true,
+							setting: true,
+							gtWing: true
+						}
+					}
 				}
 			});
 
@@ -189,6 +195,9 @@ export default class UserModule extends Module {
 				userTutorials += user.confirmedTutorials[i];
 			}
 
+			// Get the states of the user's cars
+			let carStates = user.cars.map(e => e.state);
+
 			// Response data
 			let msg = {
 				error: wm.wm5.protobuf.ErrorCode.ERR_SUCCESS,
@@ -207,7 +216,8 @@ export default class UserModule extends Module {
 
 				// 5 cars in-game, 200 cars on terminal
 				numOfOwnedCars: user.cars.length,
-				cars: user.cars.slice(0, body.maxCars), 
+				cars: user.cars.slice(0, body.maxCars),
+				carStates,
 
 				// TODO: make saving to FT Ticket
 				carCoupon: wm.wm5.protobuf.CarCreationCoupon.CAR_COUPON_HP600,
@@ -363,6 +373,28 @@ export default class UserModule extends Module {
 
 			// Encode the response
 			let message = wm.wm5.protobuf.StartTransferResponse.encode(msg);
+
+			// Send the response to the client
+            common.sendResponse(message, res);
+		})
+
+
+	    	// Update User Lock
+		app.post('/method/update_user_lock', async (req, res) => {
+
+			// Get the request body
+            let body = wm.wm5.protobuf.UpdateUserLockRequest.decode(req.body)
+
+			// TODO: Make this feature working properly
+			// This is literally just bare-bones so the shit boots
+
+			// Response data
+			let msg = {
+				error: wm.wm5.protobuf.ErrorCode.ERR_SUCCESS
+			}
+
+			// Encode the response
+			let message = wm.wm5.protobuf.UpdateUserLockResponse.encode(msg);
 
 			// Send the response to the client
             common.sendResponse(message, res);
