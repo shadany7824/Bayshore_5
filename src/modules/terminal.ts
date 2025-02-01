@@ -195,5 +195,27 @@ export default class TerminalModule extends Module {
 			// Send the response to the client
             common.sendResponse(message, res);
 		})
+
+
+		// Save Scratch Sheet
+        app.post('/method/save_scratch_sheet', (req, res) => {
+
+            // Get the information from the request
+            let body = wm.wm5.protobuf.SaveScratchSheetRequest.decode(req.body);
+
+            // TODO: Actual stuff here
+			// This is literally just bare-bones so the shit boots
+
+			// Response data
+			let msg = {
+				error: wm.wm5.protobuf.ErrorCode.ERR_SUCCESS
+			};
+
+			// Encode the response
+			let message = wm.wm5.protobuf.SaveTerminalResultResponse.encode(msg);
+
+			// Send the response to the client
+			common.sendResponse(message, res);
+        })
     }	
 }
