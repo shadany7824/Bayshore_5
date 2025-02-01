@@ -380,5 +380,27 @@ export default class UserModule extends Module {
 			// Send the response to the client
             common.sendResponse(message, res);
 		})
+
+
+	    	// Update User Lock
+		app.post('/method/update_user_lock', async (req, res) => {
+
+			// Get the request body
+            let body = wm.wm5.protobuf.UpdateUserLockRequest.decode(req.body)
+
+			// TODO: Make this feature working properly
+			// This is literally just bare-bones so the shit boots
+
+			// Response data
+			let msg = {
+				error: wm.wm5.protobuf.ErrorCode.ERR_SUCCESS
+			}
+
+			// Encode the response
+			let message = wm.wm5.protobuf.UpdateUserLockResponse.encode(msg);
+
+			// Send the response to the client
+            common.sendResponse(message, res);
+		})
 	}
 }
