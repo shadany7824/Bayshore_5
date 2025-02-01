@@ -29,7 +29,12 @@ export default class UserModule extends Module {
 					accessCode: body.accessCode
 				},
 				include: {
-					cars: true
+					cars: {
+					    include: {
+						state: true,
+						lastPlayedPlace: true
+					    }
+					}
 				}
 			});
 
@@ -169,6 +174,9 @@ export default class UserModule extends Module {
 				userTutorials += user.confirmedTutorials[i];
 			}
 
+			// Get the states of the user's cars
+			let carStates = user.cars.map(e => e.state);
+
 			// Response data
 			let msg = {
 				error: wm.v388.protobuf.ErrorCode.ERR_SUCCESS,
@@ -188,6 +196,7 @@ export default class UserModule extends Module {
 				// 5 cars in-game, 200 cars on terminal
 				numOfOwnedCars: user.cars.length,
 				cars: user.cars.slice(0, body.maxCars), 
+				carStates,
 
 				// TODO: make saving to FT Ticket
 				hp600Count: user.hp600Count, // Discarded Card
@@ -288,5 +297,27 @@ export default class UserModule extends Module {
             // Send response to client
             common.sendResponse(message, res);
 		})
+
+
+	    	// Update User Lock
+		app.post('/method/update_user_lock', async (req, res) => {
+
+			// Get the request body
+			let body = wm.v388.protobuf.UpdateUserLockRequest.decode(req.body);
+
+			// TODO: Actual stuff here
+			// This is literally just bare-bones so the shit boots
+
+			// Response data
+			let msg = {
+				error: wm.v388.protobuf.ErrorCode.ERR_SUCCESS
+			}
+
+			// Encode the response
+			let message = wm.v388.protobuf.UpdateUserLockResponse.encode(msg);
+
+			// Send the response to the client
+			common.sendResponse(message, res);
+        	})
 	}
 }
