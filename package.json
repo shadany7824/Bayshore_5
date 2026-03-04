@@ -1,7 +1,7 @@
 {
-  "name": "bayshore",
+  "name": "bayshore_5",
   "version": "1.0.0",
-  "description": "Wangan Midnight Maximum Tune 6 server implementation",
+  "description": "Wangan Midnight Maximum Tune 5 server implementation",
   "main": "dist/index.js",
   "repository": "https://github.com/ProjectAsakura/Bayshore",
   "author": "Luna and Project Asakura",
