@@ -6,6 +6,7 @@
     "country": "JPN",
     "regionName": "JPN",
     "serverIp": "127.0.0.1",
+    "notices": ["Welcome to Bayshore MT5", "Notices 2", "Notices 3"]
     "gameOptions": {
         "grantFullTuneTicketToNewUsers": 5, 
         "giftCarsFullyTuned": 0, 
