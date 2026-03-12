@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("POSTGRES_URL")
+    provider  = "postgresql"
+    url       = env("POSTGRES_URL")
+    directUrl = env("POSTGRES_URL")
 }
 
 model User {
@@ -24,7 +25,7 @@ model User {
     bookmarks           Int[]
     ScratchSheet        ScratchSheet[]
     currentSheet        Int                 @default(1)
-    lastScratched       Int                 @default(0) // Timestamp
+    lastScratched       Int                 @default(0)
 
     unlockAt            Int                 @default(0)
     createdAt           Int                 @default(dbgenerated("round(date_part('epoch'::text, now()))"))
@@ -37,7 +38,7 @@ model ScratchSheet {
     id                  Int                 @id @default(autoincrement())
     User                User                @relation(fields: [userId], references: [id])
     userId              Int
-    sheetNo             Int                 // Player's sheet number (i.e. first sheet)
+    sheetNo             Int
     squares             ScratchSquare[]
 }
 
@@ -64,7 +65,6 @@ model Car {
     user                User                @relation(fields: [userId], references: [id])
     userId              Int
 
-    // This is the Car object itself
     carId               Int                 @id @default(autoincrement())
     name                String
     regionId            Int                 @default(1)
@@ -117,7 +117,6 @@ model Car {
 
     lastPlayedAt        Int                 @default(0)
 
-    // Last Played place
     lastPlayedPlaceId   Int?
     lastPlayedPlace     PlaceList?          @relation(fields: [lastPlayedPlaceId], references: [id])
 
@@ -129,7 +128,6 @@ model Car {
     country             String              @default("JPN")
     searchCode          String              @default("JPN0123")
 
-    // This is more data about the car
     tuningPoint         Int                 @default(0)
     shopPoint           Int                 @default(0)
     shopGrade           Int                 @default(0)
@@ -138,11 +136,9 @@ model Car {
     earnedCustomColor   Boolean             @default(false)
     totalMaxiGold       Int                 @default(0)
 
-    // Car Settings
     carSettingsDbId     Int                 @unique
     setting             CarSettings         @relation(fields: [carSettingsDbId], references: [dbId])
 
-    // idk what this is
     bgmPlaylist         Int[]
 
     // VS Data
@@ -184,24 +180,16 @@ model Car {
     stampSheetCount       Int               @default(0)
     stampSheet            Int[]
 
-    // Item
     ownedItems            CarItem[]
-
-    // Aura Motif Auto Change
     auraMotifAutoChange   Boolean           @default(false)
-
-    // Screenshot Count
     screenshotCount       Int               @default(0)
 
-    // Car State
     carStateDbId          Int               @unique
     state                 CarState          @relation(fields: [carStateDbId], references: [dbId])
 
-    // Time Attack Record
     TimeAttackRecord      TimeAttackRecord[]
-
-    // Car Crown
     CarCrown              CarCrown[]
+    GhostTrail            GhostTrail[]
 }
 
 model CarGTWing {
@@ -264,7 +252,7 @@ model TimeAttackRecord {
     car                 Car                     @relation(fields: [carId], references: [carId])
     carId               Int
 
-    model               Int                     // Car model, literally just the `model` field from Car
+    model               Int
     time                Int
     course              Int
     isMorning           Boolean
@@ -275,8 +263,8 @@ model TimeAttackRecord {
     section5Time        Int?                    @map("section5Time")
     section6Time        Int?                    @map("section6Time")
     section7Time        Int?                    @map("section7Time")
-    tunePower           Int                     @default(0) // Car Power
-    tuneHandling        Int                     @default(0) // Car Handling
+    tunePower           Int                     @default(0)
+    tuneHandling        Int                     @default(0)
 }
 
 model PlaceList {
@@ -292,10 +280,36 @@ model PlaceList {
 model CarCrown {
     dbId            Int         @id @default(autoincrement())
     car             Car         @relation(fields: [carId], references: [carId])
-    
+
     carId           Int
     area            Int         @unique
     playedAt        Int         @default(0)
     tunePower       Int
     tuneHandling    Int
+}
+
+// Stores ghost trail data recorded after each ghost battle session
+model GhostTrail {
+    dbId            Int         @id @default(autoincrement())
+
+    // Session ID from save_game_result response
+    ghostSessionId  BigInt      @unique
+
+    // The car this trail belongs to
+    car             Car         @relation(fields: [carId], references: [carId])
+    carId           Int
+
+    // Ghost battle area/course info
+    area            Int         @default(0)
+    ramp            Int         @default(0)
+
+    // Ghost car properties
+    nonhuman        Boolean     @default(false)
+    characterEffect Int         @default(0)
+
+    // Raw trail binary data from register_ghost_trail
+    trail           Bytes
+
+    // When this trail was recorded
+    playedAt        Int         @default(0)
 }
