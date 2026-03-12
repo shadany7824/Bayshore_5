@@ -6,10 +6,26 @@ Modified by me.
 ## Note:
 Some of the features may not work and I'll add it in a future.
 
-## What is not working:
--Maxi G
+Here is what works and not works on WMMT5 (WM510JPN00) (Rev 1.00.05)
 
--Game crashed after scanning Banapass at Terminal Mode
+# What's working?
+-# Feature
+
+> - Story yes
+> - Ghost 85% working (fully implemented soon)
+> - Crown yes (maybe)
+> - Japan Challenge no
+> - Revenge Ghost no
+> - Online Champion Match no
+> - Time Attack yes
+> - Versus yes
+> - Terminal Mode hell no
+> - Dress-up edit from terminal no
+> - Change nameplate from terminal no
+> - Special Car Campaign idk what that is
+> - Team no
+
+Inaccurate, supposedly ghost works
 
 ## Credits
 This software is part of [Project Asakura](https://github.com/ProjectAsakura).
