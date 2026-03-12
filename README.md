@@ -6,6 +6,10 @@ Modified by me.
 ## Note:
 Some of the features may not work and I'll add it in a future.
 
+## What is not working:
+-Maxi G
+-Game crashed after scanning Banapass at Terminal Mode
+
 ## Credits
 This software is part of [Project Asakura](https://github.com/ProjectAsakura).
 
