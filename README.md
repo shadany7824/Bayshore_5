@@ -8,6 +8,7 @@ Some of the features may not work and I'll add it in a future.
 
 ## What is not working:
 -Maxi G
+
 -Game crashed after scanning Banapass at Terminal Mode
 
 ## Credits
