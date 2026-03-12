@@ -5,6 +5,12 @@ import { Module } from "./module";
 import iconv from "iconv-lite";
 import { Config } from "./config";
 
+// Import Proto
+import * as wm from "./wmmt/wm5.proto";
+
+// Import Util
+import * as common from "./modules/util/common";
+
 // TODO: Move this into the config
 const STARTUP_URI = `https://${Config.getConfig().serverIp || "localhost"}:9002`;
 const STARTUP_HOST = `${Config.getConfig().serverIp || "localhost"}:9002`;
@@ -28,7 +34,7 @@ export default class AllnetModule extends Module {
         
             const base64 = req.body.toString('ascii');
             const zbytes = Buffer.from(base64, "base64");
-            const bytes = unzipSync(zbytes);
+            const bytes = unzipSync(Uint8Array.from(zbytes));
             const str = bytes.toString("ascii").trim();
         
             const kvps = str.split("&");
@@ -105,6 +111,57 @@ export default class AllnetModule extends Module {
             };
                 
             res.send(resParams);
+        });
+
+        // Register System Info - sent by cabinet during ALL.Net startup sequence
+        app.post('/method/register_system_info', (req, res) => {
+            console.log('ALL.net: register_system_info');
+
+            // Get current timestamps
+            let now = Math.floor(new Date().getTime() / 1000);
+
+            // Response data
+            let msg = {
+                error: wm.wm5.protobuf.ErrorCode.ERR_SUCCESS,
+                regionId: 1,
+                placeId: "1",
+                carCampaignStartAt: now,
+                carCampaignEndAt: now + (60 * 60 * 24 * 365), // 1 year from now
+                teamSuspensionAnnouncementStartAt: now,
+                teamSuspensionStartAt: now,
+                faceRecognitionPermitted: false,
+                featureVersion: {
+                    version: 1,
+                    year: new Date().getFullYear(),
+                    month: new Date().getMonth() + 1,
+                    pluses: 0,
+                    releaseAt: now,
+                },
+                latestCompetitionId: 0,
+                competitionSchedule: {
+                    competitionId: 0,
+                    qualifyingPeriodStartAt: now,
+                    qualifyingPeriodCloseAt: now,
+                    competitionStartAt: now,
+                    competitionCloseAt: now,
+                    competitionEndAt: now,
+                    lengthOfPeriod: 0,
+                    lengthOfInterval: 0,
+                    area: 0,
+                    minigamePatternId: 0,
+                },
+                specialGhostSchedule: {
+                    startAt: now,
+                    endAt: now + (60 * 60 * 24 * 365),
+                    announcementEndAt: now + (60 * 60 * 24 * 365),
+                },
+            };
+
+            // Encode the response
+            let message = wm.wm5.protobuf.RegisterSystemInfoResponse.encode(msg);
+
+            // Send the response to the client
+            common.sendResponse(message, res);
         });
     }
 }
